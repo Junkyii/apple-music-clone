@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Sidebar } from "@/components/Sidebar";
 import { Player } from "@/components/Player";
+import { RightSidebar } from "@/components/RightSidebar";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -41,6 +42,11 @@ export default function RootLayout({
                  {children}
               </div>
             </main>
+
+            {/* Right Sidebar Area */}
+            <aside className="hidden xl:block w-80 flex-shrink-0 z-20 border-l border-zinc-800/50 bg-black/20">
+               <RightSidebar />
+            </aside>
             
             {/* Player (Fixed) */}
             <Player />
