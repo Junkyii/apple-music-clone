@@ -9,34 +9,41 @@ interface AlbumCardProps {
 
 export function AlbumCard({ title, artist, image }: AlbumCardProps) {
   return (
-    <div className="group relative flex flex-col gap-3 rounded-md p-3 hover:bg-zinc-100 dark:hover:bg-zinc-800/50 transition-colors cursor-pointer">
-      <div className="relative aspect-square w-full overflow-hidden rounded-md bg-zinc-200 dark:bg-zinc-800 shadow-md">
-        {/* We would use Next/Image here with a real src, but for now we might use a placeholder or div if src is empty */}
+    <div className="group relative flex flex-col gap-2 cursor-pointer">
+      {/* Album Art */}
+      <div className="relative aspect-square w-full overflow-hidden rounded-xl bg-[#1c1c1e] shadow-lg shadow-black/20">
         {image ? (
-            <Image
+          <Image
             src={image}
             alt={title}
             width={300}
             height={300}
-            className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
-            />
+            className="h-full w-full object-cover transition-all duration-500 group-hover:scale-[1.03]"
+          />
         ) : (
-             <div className="w-full h-full flex items-center justify-center bg-zinc-300 dark:bg-zinc-700 text-zinc-500">
-                No Image
-             </div>
+          <div className="w-full h-full flex items-center justify-center bg-[#2c2c2e] text-[#6e6e73]">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round">
+              <circle cx="12" cy="12" r="10" /><circle cx="12" cy="12" r="3" />
+            </svg>
+          </div>
         )}
-        
-        {/* Play Overlay */}
-        <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-end justify-end p-2">
-           <div className="bg-red-500 rounded-full p-2 text-white shadow-lg transform translate-y-2 group-hover:translate-y-0 transition-transform">
-               <Play className="h-5 w-5 fill-current" />
-           </div>
+
+        {/* Play overlay */}
+        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-300 flex items-center justify-center">
+          <div className="w-11 h-11 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center shadow-xl opacity-0 group-hover:opacity-100 scale-75 group-hover:scale-100 transition-all duration-300">
+            <Play className="h-5 w-5 text-black fill-black ml-0.5" />
+          </div>
         </div>
       </div>
-      
-      <div className="flex flex-col gap-1">
-        <h3 className="text-sm font-semibold truncate text-zinc-900 dark:text-zinc-100 leading-tight">{title}</h3>
-        <p className="text-xs text-zinc-500 dark:text-zinc-400 truncate">{artist}</p>
+
+      {/* Text */}
+      <div className="flex flex-col gap-0.5 px-0.5">
+        <h3 className="text-[13px] font-semibold truncate text-[#f5f5f7] leading-tight">
+          {title}
+        </h3>
+        <p className="text-[12px] text-[#86868b] truncate">
+          {artist}
+        </p>
       </div>
     </div>
   );

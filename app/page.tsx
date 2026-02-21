@@ -6,7 +6,7 @@ import { AlbumCard } from "@/components/AlbumCard";
 import { ALBUMS } from "@/lib/data";
 import Link from "next/link";
 import { GreetingGrid } from "@/components/GreetingGrid";
-import { Search, Loader2 } from "lucide-react";
+import { Search, Loader2, ChevronRight } from "lucide-react";
 
 interface TrendingAlbum {
   id: string;
@@ -16,19 +16,37 @@ interface TrendingAlbum {
   year: string;
 }
 
+function SectionHeader({ title, badge, href }: { title: string; badge?: string; href?: string }) {
+  return (
+    <div className="flex items-center justify-between mb-5">
+      <div className="flex items-center gap-3">
+        <h2 className="text-[22px] font-bold tracking-tight text-[#f5f5f7]">{title}</h2>
+        {badge && (
+          <span className="text-[10px] bg-[#fc3c44]/15 text-[#fc3c44] px-2.5 py-0.5 rounded-full font-semibold uppercase tracking-wider">
+            {badge}
+          </span>
+        )}
+      </div>
+      {href && (
+        <Link href={href} className="flex items-center gap-0.5 text-[13px] font-medium text-[#fc3c44] hover:text-[#e0353c] transition-colors">
+          See All
+          <ChevronRight className="w-4 h-4" />
+        </Link>
+      )}
+    </div>
+  );
+}
+
 export default function Home() {
   const router = useRouter();
   const [searchQuery, setSearchQuery] = useState("");
   const [trending, setTrending] = useState<TrendingAlbum[]>([]);
   const [trendingLoading, setTrendingLoading] = useState(true);
 
-  // Fetch trending/new releases from Spotify
   useEffect(() => {
     fetch("/api/new-releases")
       .then(res => res.json())
-      .then(data => {
-        setTrending(data.albums || []);
-      })
+      .then(data => setTrending(data.albums || []))
       .catch(err => console.error("Failed to fetch trending:", err))
       .finally(() => setTrendingLoading(false));
   }, []);
@@ -41,119 +59,94 @@ export default function Home() {
   };
 
   return (
-    <div className="p-6 pb-24 bg-gradient-to-b from-zinc-900/50 to-black min-h-full">
+    <div className="px-8 pt-6 pb-28 min-h-full">
       
       {/* Search Bar */}
-      <div className="flex items-center justify-between mb-6">
-        <form onSubmit={handleSearch} className="flex items-center space-x-2 bg-zinc-800/50 rounded-full px-4 py-2 w-full max-w-md border border-zinc-700/30 focus-within:border-red-500/40 transition-colors">
-          <Search className="w-5 h-5 text-zinc-400 shrink-0" />
+      <div className="mb-8">
+        <form onSubmit={handleSearch} className="flex items-center gap-2.5 bg-white/[0.06] rounded-xl px-4 py-2.5 w-full max-w-lg border border-white/[0.04] focus-within:border-[#fc3c44]/30 focus-within:bg-white/[0.08] transition-all duration-300">
+          <Search className="w-[18px] h-[18px] text-[#6e6e73] shrink-0" />
           <input
             type="text"
-            placeholder="What do you want to play?"
-            className="bg-transparent border-none focus:outline-none text-sm text-zinc-100 placeholder-zinc-400 w-full"
+            placeholder="Search songs, albums, artists..."
+            className="bg-transparent border-none focus:outline-none text-[14px] text-[#f5f5f7] placeholder-[#6e6e73] w-full font-medium"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
         </form>
-        <div className="flex items-center space-x-4">
-            {/* Icons */}
-        </div>
       </div>
 
-       <GreetingGrid />
+      {/* Quick Access Grid */}
+      <GreetingGrid />
       
-      {/* Trending Now - From Spotify API */}
-      <section className="mb-8">
-        <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center gap-3">
-            <h2 className="text-2xl font-bold tracking-tight text-white">Trending Now</h2>
-            <span className="text-xs bg-rose-500/20 text-rose-400 px-2 py-0.5 rounded-full font-medium">
-              Apple Music
-            </span>
-          </div>
-          <Link href="/search" className="text-sm font-medium text-zinc-400 hover:text-white transition-colors">
-            Show all
-          </Link>
-        </div>
+      {/* Trending Now — From iTunes */}
+      <section className="mb-10">
+        <SectionHeader title="Trending Now" badge="Live" href="/search" />
         {trendingLoading ? (
-          <div className="flex items-center justify-center py-12">
-            <Loader2 className="w-6 h-6 text-red-500 animate-spin" />
+          <div className="flex items-center justify-center py-16">
+            <Loader2 className="w-6 h-6 text-[#fc3c44] animate-spin" />
           </div>
         ) : trending.length > 0 ? (
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-5">
             {trending.slice(0, 5).map((album) => (
               <Link key={album.id} href={`/album/${album.id}`}>
-                <AlbumCard
-                  title={album.title}
-                  artist={album.artist}
-                  image={album.image}
-                />
+                <AlbumCard title={album.title} artist={album.artist} image={album.image} />
               </Link>
             ))}
           </div>
         ) : (
-          <p className="text-sm text-zinc-500">Connect to see trending music from Apple Music.</p>
+          <div className="bg-white/[0.03] rounded-xl p-8 text-center">
+            <p className="text-[14px] text-[#6e6e73]">Loading trending music...</p>
+          </div>
         )}
       </section>
 
-      <section className="mb-8">
-        <div className="flex items-center justify-between mb-4">
-            <h2 className="text-2xl font-bold tracking-tight text-white">Made For You</h2>
-            <Link href="#" className="text-sm font-medium text-zinc-400 hover:text-white">Show all</Link>
-        </div>
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+      {/* Made For You */}
+      <section className="mb-10">
+        <SectionHeader title="Made For You" />
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-5">
           {ALBUMS.slice(0, 4).map((album, i) => (
             <Link key={`made-for-${album.title}`} href={album.id ? `/album/${album.id}` : '#'}>
-                <AlbumCard
+              <AlbumCard
                 title={`Daily Mix 0${i + 1}`}
                 artist={`${album.artist}, ${ALBUMS[(i+1)%ALBUMS.length].artist}...`}
                 image={album.image}
-                />
+              />
             </Link>
           ))}
         </div>
       </section>
       
-      <section>
-        <h2 className="text-xl font-semibold mb-4 text-zinc-100">Top Picks</h2>
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+      {/* Top Picks */}
+      <section className="mb-10">
+        <SectionHeader title="Top Picks" />
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-5">
           {ALBUMS.map((album) => (
             <Link key={album.title} href={album.id ? `/album/${album.id}` : '#'}>
-                <AlbumCard
-                title={album.title}
-                artist={album.artist}
-                image={album.image}
-                />
+              <AlbumCard title={album.title} artist={album.artist} image={album.image} />
             </Link>
           ))}
         </div>
       </section>
 
-       <section className="mt-10">
-        <h2 className="text-xl font-semibold mb-4 text-zinc-100">New Releases</h2>
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+      {/* New Releases */}
+      <section className="mb-10">
+        <SectionHeader title="New Releases" />
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-5">
           {ALBUMS.slice(0, 4).reverse().map((album) => (
-             <Link key={`new-${album.title}`} href={album.id ? `/album/${album.id}` : '#'}>
-                <AlbumCard
-                title={album.title}
-                artist={album.artist}
-                image={album.image}
-                />
+            <Link key={`new-${album.title}`} href={album.id ? `/album/${album.id}` : '#'}>
+              <AlbumCard title={album.title} artist={album.artist} image={album.image} />
             </Link>
           ))}
         </div>
       </section>
 
-      <section className="mt-10">
-        <h2 className="text-xl font-semibold mb-4 text-zinc-100">K-Pop & KRnB Essentials</h2>
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+      {/* K-Pop & KRnB */}
+      <section className="mb-10">
+        <SectionHeader title="K-Pop & KRnB Essentials" />
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-5">
           {ALBUMS.slice(8).map((album) => (
-             <Link key={`kpop-${album.title}`} href={album.id ? `/album/${album.id}` : '#'}>
-                <AlbumCard
-                title={album.title}
-                artist={album.artist}
-                image={album.image}
-                />
+            <Link key={`kpop-${album.title}`} href={album.id ? `/album/${album.id}` : '#'}>
+              <AlbumCard title={album.title} artist={album.artist} image={album.image} />
             </Link>
           ))}
         </div>

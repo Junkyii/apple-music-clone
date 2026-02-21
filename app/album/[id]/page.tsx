@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { ALBUMS } from "@/lib/data";
 import Image from "next/image";
-import { Play, Plus, MoreHorizontal, Clock, Loader2 } from "lucide-react";
+import { Play, Pause, Plus, MoreHorizontal, Clock, Loader2, Heart } from "lucide-react";
 import { useParams } from "next/navigation";
 
 interface AlbumSong {
@@ -22,6 +22,7 @@ interface AlbumData {
   imageLarge?: string;
   year: string;
   totalTracks?: number;
+  genre?: string;
   source: 'local' | 'itunes';
   songs: AlbumSong[];
 }
@@ -34,7 +35,6 @@ export default function AlbumPage() {
   const [error, setError] = useState(false);
 
   useEffect(() => {
-    // First try local data
     const localAlbum = ALBUMS.find((a) => a.id === id);
     if (localAlbum) {
       setAlbum({
@@ -54,15 +54,11 @@ export default function AlbumPage() {
       return;
     }
 
-    // Otherwise fetch from Spotify API
     fetch(`/api/albums/${id}`)
       .then(res => res.json())
       .then(data => {
-        if (data.error) {
-          setError(true);
-        } else {
-          setAlbum({ ...data, source: 'spotify' });
-        }
+        if (data.error) setError(true);
+        else setAlbum({ ...data, source: 'itunes' });
       })
       .catch(() => setError(true))
       .finally(() => setLoading(false));
@@ -71,25 +67,26 @@ export default function AlbumPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
-        <Loader2 className="w-8 h-8 text-red-500 animate-spin" />
+        <Loader2 className="w-7 h-7 text-[#fc3c44] animate-spin" />
       </div>
     );
   }
 
   if (error || !album) {
     return (
-      <div className="p-6 flex flex-col items-center justify-center min-h-[60vh] text-center">
-        <h2 className="text-2xl font-bold text-zinc-300 mb-2">Album not found</h2>
-        <p className="text-zinc-500">The album you&apos;re looking for doesn&apos;t exist.</p>
+      <div className="px-8 pt-20 flex flex-col items-center justify-center min-h-[60vh] text-center">
+        <h2 className="text-[22px] font-bold text-[#f5f5f7] mb-2">Album Not Found</h2>
+        <p className="text-[14px] text-[#6e6e73]">The album you&apos;re looking for doesn&apos;t exist.</p>
       </div>
     );
   }
 
   return (
-    <div className="p-6 pb-32">
-      {/* Header */}
+    <div className="px-8 pt-6 pb-28">
+      {/* Album Header */}
       <div className="flex flex-col md:flex-row gap-8 items-end mb-8">
-        <div className="relative w-64 h-64 shadow-2xl rounded-md overflow-hidden bg-zinc-800">
+        {/* Artwork */}
+        <div className="relative w-[240px] h-[240px] rounded-xl overflow-hidden shadow-2xl shadow-black/50 shrink-0">
           <Image
             src={album.imageLarge || album.image}
             alt={album.title}
@@ -97,71 +94,96 @@ export default function AlbumPage() {
             className="object-cover"
           />
         </div>
-        <div className="flex flex-col gap-2">
-          <div className="flex items-center gap-2">
-            <h2 className="text-lg font-bold text-red-500 uppercase tracking-wide">Album</h2>
+
+        {/* Info */}
+        <div className="flex flex-col gap-2 pb-1">
+          <div className="flex items-center gap-2.5">
+            <span className="text-[11px] font-semibold text-[#fc3c44] uppercase tracking-[0.1em]">Album</span>
             {album.source === 'itunes' && (
-              <span className="text-xs bg-rose-500/20 text-rose-400 px-2 py-0.5 rounded-full font-medium">
+              <span className="text-[10px] bg-[#fc3c44]/15 text-[#fc3c44] px-2 py-0.5 rounded-full font-semibold">
                 Apple Music
               </span>
             )}
           </div>
-          <h1 className="text-4xl md:text-6xl font-extrabold text-zinc-50 tracking-tight">
+          <h1 className="text-[36px] md:text-[44px] font-extrabold text-[#f5f5f7] tracking-tight leading-none">
             {album.title}
           </h1>
-          <div className="flex items-center gap-2 text-lg font-medium text-zinc-300">
-            <span>{album.artist}</span>
+          <div className="flex items-center gap-2 text-[14px] text-[#86868b] font-medium mt-1">
+            <span className="text-[#f5f5f7]">{album.artist}</span>
             {album.year && (
               <>
-                <span>•</span>
-                <span className="text-zinc-500">{album.year}</span>
+                <span className="text-[#3a3a3c]">•</span>
+                <span>{album.year}</span>
               </>
             )}
-            <span>•</span>
-            <span className="text-zinc-500">{album.songs.length} songs</span>
+            <span className="text-[#3a3a3c]">•</span>
+            <span>{album.songs.length} songs</span>
+            {album.genre && (
+              <>
+                <span className="text-[#3a3a3c]">•</span>
+                <span>{album.genre}</span>
+              </>
+            )}
           </div>
         </div>
       </div>
 
       {/* Action Buttons */}
-      <div className="flex items-center gap-4 mb-8">
-        <button className="flex items-center gap-2 bg-red-500 hover:bg-red-600 text-white px-8 py-3 rounded-md font-semibold text-lg transition-colors">
-          <Play className="fill-current w-5 h-5" />
+      <div className="flex items-center gap-3 mb-8">
+        <button className="flex items-center gap-2 bg-[#fc3c44] hover:bg-[#e0353c] text-white pl-5 pr-6 py-2.5 rounded-full font-semibold text-[14px] transition-all duration-200 hover:shadow-lg hover:shadow-red-500/20 active:scale-95">
+          <Play className="fill-current w-4 h-4" />
           Play
         </button>
-        <button className="p-3 border border-zinc-700 rounded-full hover:bg-zinc-800 text-red-500 transition-colors">
-          <Plus className="w-5 h-5" />
+        <button className="flex items-center gap-2 bg-white/[0.06] hover:bg-white/[0.1] text-[#f5f5f7] pl-5 pr-6 py-2.5 rounded-full font-semibold text-[14px] transition-all duration-200 active:scale-95 border border-white/[0.06]">
+          <Pause className="w-4 h-4" />
+          Shuffle
         </button>
-        <button className="p-3 border border-zinc-700 rounded-full hover:bg-zinc-800 text-red-500 transition-colors">
-          <MoreHorizontal className="w-5 h-5" />
+        <button className="w-10 h-10 rounded-full bg-white/[0.06] hover:bg-white/[0.1] flex items-center justify-center transition-colors border border-white/[0.06]">
+          <Heart className="w-[18px] h-[18px] text-[#86868b]" />
+        </button>
+        <button className="w-10 h-10 rounded-full bg-white/[0.06] hover:bg-white/[0.1] flex items-center justify-center transition-colors border border-white/[0.06]">
+          <Plus className="w-[18px] h-[18px] text-[#86868b]" />
+        </button>
+        <button className="w-10 h-10 rounded-full bg-white/[0.06] hover:bg-white/[0.1] flex items-center justify-center transition-colors border border-white/[0.06]">
+          <MoreHorizontal className="w-[18px] h-[18px] text-[#86868b]" />
         </button>
       </div>
 
-      {/* Songs List */}
-      <div className="flex flex-col">
-        <div className="grid grid-cols-[auto_1fr_auto] gap-4 px-4 py-2 border-b border-zinc-800 text-sm font-medium text-zinc-500 uppercase tracking-wider mb-2">
-          <span className="w-8 text-center">#</span>
+      {/* Track List */}
+      <div className="bg-white/[0.02] rounded-xl overflow-hidden">
+        {/* Header */}
+        <div className="grid grid-cols-[40px_1fr_60px] gap-3 px-5 py-3 text-[11px] font-semibold text-[#6e6e73] uppercase tracking-[0.06em] border-b border-white/[0.04]">
+          <span className="text-center">#</span>
           <span>Title</span>
-          <Clock className="w-4 h-4" />
+          <span className="flex justify-end">
+            <Clock className="w-3.5 h-3.5" />
+          </span>
         </div>
+
+        {/* Tracks */}
         {album.songs.map((song, index) => (
           <div
             key={song.id || index}
-            className="group grid grid-cols-[auto_1fr_auto] gap-4 px-4 py-3 rounded-md hover:bg-zinc-800/50 items-center text-sm transition-colors cursor-pointer"
+            className="group grid grid-cols-[40px_1fr_60px] gap-3 px-5 py-3 hover:bg-white/[0.04] items-center transition-colors cursor-pointer border-b border-white/[0.02] last:border-b-0"
           >
-            <span className="w-8 text-center text-zinc-500 group-hover:hidden">
-              {song.trackNumber || index + 1}
-            </span>
-            <span className="w-8 text-center hidden group-hover:block text-zinc-100">
-              <Play className="w-4 h-4 fill-current ml-2" />
-            </span>
-            <div className="flex flex-col">
-              <span className="font-medium text-zinc-100">{song.title}</span>
+            {/* Track Number / Play */}
+            <div className="flex items-center justify-center">
+              <span className="text-[13px] text-[#6e6e73] tabular-nums group-hover:hidden">
+                {song.trackNumber || index + 1}
+              </span>
+              <Play className="w-3.5 h-3.5 text-[#f5f5f7] fill-current hidden group-hover:block" />
+            </div>
+
+            {/* Title & Artist */}
+            <div className="flex flex-col min-w-0">
+              <span className="text-[14px] font-medium text-[#f5f5f7] truncate">{song.title}</span>
               {song.artist && album.source === 'itunes' && (
-                <span className="text-xs text-zinc-500">{song.artist}</span>
+                <span className="text-[12px] text-[#6e6e73] truncate">{song.artist}</span>
               )}
             </div>
-            <span className="text-zinc-500">{song.duration}</span>
+
+            {/* Duration */}
+            <span className="text-[13px] text-[#6e6e73] tabular-nums text-right">{song.duration}</span>
           </div>
         ))}
       </div>
