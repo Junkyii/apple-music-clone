@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { searchSpotify } from '@/lib/spotify';
+import { searchMusic } from '@/lib/music-api';
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
@@ -10,12 +10,12 @@ export async function GET(request: Request) {
   }
 
   try {
-    const results = await searchSpotify(query, 'track,album', 20);
+    const results = await searchMusic(query, 20);
     return NextResponse.json(results);
   } catch (error) {
     console.error('Search API error:', error);
     return NextResponse.json(
-      { error: 'Failed to search Spotify', albums: [], tracks: [] },
+      { error: 'Failed to search', albums: [], tracks: [] },
       { status: 500 }
     );
   }

@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { getAlbum } from '@/lib/spotify';
+import { getAlbum } from '@/lib/music-api';
 
 export async function GET(
   request: Request,
@@ -13,7 +13,7 @@ export async function GET(
   } catch (error) {
     console.error('Album API error:', error);
     return NextResponse.json(
-      { error: 'Failed to fetch album from Spotify' },
+      { error: 'Failed to fetch album' },
       { status: 500 }
     );
   }

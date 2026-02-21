@@ -22,7 +22,7 @@ interface AlbumData {
   imageLarge?: string;
   year: string;
   totalTracks?: number;
-  source: 'local' | 'spotify';
+  source: 'local' | 'itunes';
   songs: AlbumSong[];
 }
 
@@ -100,9 +100,9 @@ export default function AlbumPage() {
         <div className="flex flex-col gap-2">
           <div className="flex items-center gap-2">
             <h2 className="text-lg font-bold text-red-500 uppercase tracking-wide">Album</h2>
-            {album.source === 'spotify' && (
-              <span className="text-xs bg-green-500/20 text-green-400 px-2 py-0.5 rounded-full font-medium">
-                Spotify
+            {album.source === 'itunes' && (
+              <span className="text-xs bg-rose-500/20 text-rose-400 px-2 py-0.5 rounded-full font-medium">
+                Apple Music
               </span>
             )}
           </div>
@@ -157,7 +157,7 @@ export default function AlbumPage() {
             </span>
             <div className="flex flex-col">
               <span className="font-medium text-zinc-100">{song.title}</span>
-              {song.artist && album.source === 'spotify' && (
+              {song.artist && album.source === 'itunes' && (
                 <span className="text-xs text-zinc-500">{song.artist}</span>
               )}
             </div>

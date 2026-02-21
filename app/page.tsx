@@ -46,7 +46,7 @@ export default function Home() {
       {/* Search Bar */}
       <div className="flex items-center justify-between mb-6">
         <form onSubmit={handleSearch} className="flex items-center space-x-2 bg-zinc-800/50 rounded-full px-4 py-2 w-full max-w-md border border-zinc-700/30 focus-within:border-red-500/40 transition-colors">
-          <Search className="w-5 h-5 text-zinc-400 flex-shrink-0" />
+          <Search className="w-5 h-5 text-zinc-400 shrink-0" />
           <input
             type="text"
             placeholder="What do you want to play?"
@@ -67,8 +67,8 @@ export default function Home() {
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-3">
             <h2 className="text-2xl font-bold tracking-tight text-white">Trending Now</h2>
-            <span className="text-xs bg-green-500/20 text-green-400 px-2 py-0.5 rounded-full font-medium">
-              Spotify
+            <span className="text-xs bg-rose-500/20 text-rose-400 px-2 py-0.5 rounded-full font-medium">
+              Apple Music
             </span>
           </div>
           <Link href="/search" className="text-sm font-medium text-zinc-400 hover:text-white transition-colors">
@@ -92,7 +92,7 @@ export default function Home() {
             ))}
           </div>
         ) : (
-          <p className="text-sm text-zinc-500">Add Spotify API credentials to see trending music.</p>
+          <p className="text-sm text-zinc-500">Connect to see trending music from Apple Music.</p>
         )}
       </section>
 

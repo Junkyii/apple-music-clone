@@ -66,7 +66,7 @@ export default function SearchPage() {
       {/* Search Input */}
       <div className="mb-8">
         <div className="flex items-center space-x-3 bg-zinc-800/60 rounded-xl px-5 py-3.5 w-full max-w-2xl border border-zinc-700/50 focus-within:border-red-500/50 transition-colors">
-          <Search className="w-5 h-5 text-zinc-400 flex-shrink-0" />
+          <Search className="w-5 h-5 text-zinc-400 shrink-0" />
           <input
             type="text"
             placeholder="Search for songs, albums, or artists..."
@@ -75,7 +75,7 @@ export default function SearchPage() {
             onChange={(e) => setQuery(e.target.value)}
             autoFocus
           />
-          {loading && <Loader2 className="w-5 h-5 text-zinc-400 animate-spin flex-shrink-0" />}
+          {loading && <Loader2 className="w-5 h-5 text-zinc-400 animate-spin shrink-0" />}
         </div>
       </div>
 
@@ -83,8 +83,8 @@ export default function SearchPage() {
       {!searched && !loading && (
         <div className="flex flex-col items-center justify-center py-20 text-center">
           <Search className="w-16 h-16 text-zinc-700 mb-4" />
-          <h2 className="text-xl font-semibold text-zinc-400 mb-2">Search Spotify</h2>
-          <p className="text-sm text-zinc-600">Find songs, albums, and artists from the Spotify catalog</p>
+          <h2 className="text-xl font-semibold text-zinc-400 mb-2">Search Apple Music</h2>
+          <p className="text-sm text-zinc-600">Find songs, albums, and artists from the Apple Music catalog</p>
         </div>
       )}
 
@@ -99,7 +99,7 @@ export default function SearchPage() {
                 className="flex items-center gap-4 p-3 rounded-lg hover:bg-zinc-800/50 transition-colors group cursor-pointer"
               >
                 {/* Album Art for Song */}
-                <div className="relative h-14 w-14 flex-shrink-0 rounded-md overflow-hidden bg-zinc-800 shadow-md">
+                <div className="relative h-14 w-14 shrink-0 rounded-md overflow-hidden bg-zinc-800 shadow-md">
                   {track.albumImage ? (
                     <Image
                       src={track.albumImage}
