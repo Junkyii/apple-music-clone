@@ -54,11 +54,21 @@ export default function AlbumPage() {
       return;
     }
 
-    fetch(`/api/albums/${id}`)
+    // Try Supabase first, then fall back to iTunes
+    fetch(`/api/supabase/albums/${id}`)
       .then(res => res.json())
       .then(data => {
-        if (data.error) setError(true);
-        else setAlbum({ ...data, source: 'itunes' });
+        if (data.error) {
+          // Not in Supabase, try iTunes
+          return fetch(`/api/albums/${id}`)
+            .then(res => res.json())
+            .then(itunesData => {
+              if (itunesData.error) setError(true);
+              else setAlbum({ ...itunesData, source: 'itunes' });
+            });
+        } else {
+          setAlbum({ ...data, source: 'local' });
+        }
       })
       .catch(() => setError(true))
       .finally(() => setLoading(false));

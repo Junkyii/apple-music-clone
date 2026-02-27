@@ -16,6 +16,15 @@ interface TrendingAlbum {
   year: string;
 }
 
+interface SupabaseAlbum {
+  id: string;
+  title: string;
+  artist: string;
+  image: string;
+  year: string;
+  genre: string;
+}
+
 function SectionHeader({ title, badge, href }: { title: string; badge?: string; href?: string }) {
   return (
     <div className="flex items-center justify-between mb-5">
@@ -42,6 +51,9 @@ export default function Home() {
   const [searchQuery, setSearchQuery] = useState("");
   const [trending, setTrending] = useState<TrendingAlbum[]>([]);
   const [trendingLoading, setTrendingLoading] = useState(true);
+  const [kpopAlbums, setKpopAlbums] = useState<SupabaseAlbum[]>([]);
+  const [krnbAlbums, setKrnbAlbums] = useState<SupabaseAlbum[]>([]);
+  const [kpopLoading, setKpopLoading] = useState(true);
 
   useEffect(() => {
     fetch("/api/new-releases")
@@ -49,6 +61,18 @@ export default function Home() {
       .then(data => setTrending(data.albums || []))
       .catch(err => console.error("Failed to fetch trending:", err))
       .finally(() => setTrendingLoading(false));
+
+    // Fetch K-Pop & K-R&B from Supabase
+    Promise.all([
+      fetch("/api/supabase/albums?genre=kpop").then(r => r.json()),
+      fetch("/api/supabase/albums?genre=krnb").then(r => r.json()),
+    ])
+      .then(([kpopData, krnbData]) => {
+        setKpopAlbums(kpopData.albums || []);
+        setKrnbAlbums(krnbData.albums || []);
+      })
+      .catch(err => console.error("Failed to fetch K-Pop/K-R&B:", err))
+      .finally(() => setKpopLoading(false));
   }, []);
 
   const handleSearch = (e: React.FormEvent) => {
@@ -140,16 +164,48 @@ export default function Home() {
         </div>
       </section>
 
-      {/* K-Pop & KRnB */}
+      {/* K-Pop */}
       <section className="mb-10">
-        <SectionHeader title="K-Pop & KRnB Essentials" />
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-5">
-          {ALBUMS.slice(8).map((album) => (
-            <Link key={`kpop-${album.title}`} href={album.id ? `/album/${album.id}` : '#'}>
-              <AlbumCard title={album.title} artist={album.artist} image={album.image} />
-            </Link>
-          ))}
-        </div>
+        <SectionHeader title="K-Pop Essentials" badge="Supabase" />
+        {kpopLoading ? (
+          <div className="flex items-center justify-center py-16">
+            <Loader2 className="w-6 h-6 text-[#fc3c44] animate-spin" />
+          </div>
+        ) : kpopAlbums.length > 0 ? (
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-5">
+            {kpopAlbums.map((album) => (
+              <Link key={`kpop-${album.id}`} href={`/album/${album.id}`}>
+                <AlbumCard title={album.title} artist={album.artist} image={album.image} />
+              </Link>
+            ))}
+          </div>
+        ) : (
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-5">
+            {ALBUMS.slice(8).map((album) => (
+              <Link key={`kpop-${album.title}`} href={album.id ? `/album/${album.id}` : '#'}>
+                <AlbumCard title={album.title} artist={album.artist} image={album.image} />
+              </Link>
+            ))}
+          </div>
+        )}
+      </section>
+
+      {/* K-R&B */}
+      <section className="mb-10">
+        <SectionHeader title="K-R&B Essentials" badge="Supabase" />
+        {kpopLoading ? (
+          <div className="flex items-center justify-center py-16">
+            <Loader2 className="w-6 h-6 text-[#fc3c44] animate-spin" />
+          </div>
+        ) : krnbAlbums.length > 0 ? (
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-5">
+            {krnbAlbums.map((album) => (
+              <Link key={`krnb-${album.id}`} href={`/album/${album.id}`}>
+                <AlbumCard title={album.title} artist={album.artist} image={album.image} />
+              </Link>
+            ))}
+          </div>
+        ) : null}
       </section>
     </div>
   );
