@@ -91,7 +91,7 @@ export const ALBUMS = [
     title: "Get Up",
     artist: "NewJeans",
     year: "2023",
-    image: "https://upload.wikimedia.org/wikipedia/en/2/23/NewJeans_-_Get_Up.png",
+    image: "https://is1-ssl.mzstatic.com/image/thumb/Music116/v4/d3/4b/7e/d34b7e1e-af3b-43b6-2949-7a8c652a1bc9/196922462726_Cover.jpg/600x600bb.jpg",
     songs: [
         { title: "New Jeans", duration: "1:48" },
         { title: "Super Shy", duration: "2:34" },
@@ -106,7 +106,7 @@ export const ALBUMS = [
     title: "Proof",
     artist: "BTS",
     year: "2022",
-    image: "https://upload.wikimedia.org/wikipedia/en/5/52/BTS_Proof_album_cover_art.jpg",
+    image: "https://is1-ssl.mzstatic.com/image/thumb/Music122/v4/f7/68/9c/f7689ce3-6d41-60cd-62d2-57a91ddf5b9d/196922067341_Cover.jpg/600x600bb.jpg",
     songs: [
         { title: "Yet To Come", duration: "3:13" },
         { title: "Run BTS", duration: "3:25" },
@@ -118,7 +118,7 @@ export const ALBUMS = [
     title: "Born Pink",
     artist: "BLACKPINK",
     year: "2022",
-    image: "https://upload.wikimedia.org/wikipedia/en/e/e7/Born_Pink_Digital.jpeg",
+    image: "https://is1-ssl.mzstatic.com/image/thumb/Music122/v4/52/8e/5a/528e5a30-52b0-b68c-f184-635fcf15e6d7/22UM1IM01017.rgb.jpg/600x600bb.jpg",
     songs: [
         { title: "Pink Venom", duration: "3:06" },
         { title: "Shut Down", duration: "2:55" },
@@ -130,7 +130,7 @@ export const ALBUMS = [
     title: "130 Mood: TRBL",
     artist: "DEAN",
     year: "2016",
-    image: "https://upload.wikimedia.org/wikipedia/en/3/3a/DEAN_130_Mood_TRBL_album_cover.png",
+    image: "https://is1-ssl.mzstatic.com/image/thumb/Music115/v4/8e/a2/d0/8ea2d001-0b52-a451-4a7c-de35d3502155/00602547860828.rgb.jpg/600x600bb.jpg",
     songs: [
         { title: "Pour Up", duration: "3:30" },
         { title: "Bonnie & Clyde", duration: "3:44" },
@@ -142,10 +142,119 @@ export const ALBUMS = [
     title: "Chill Kill",
     artist: "Red Velvet",
     year: "2023",
-    image: "https://upload.wikimedia.org/wikipedia/en/e/ee/Red_Velvet_-_Chill_Kill.png",
+    image: "https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/52/a6/db/52a6dbad-8427-9b5c-e90f-34974cc5e3d0/00888735945847_Cover.jpg/600x600bb.jpg",
     songs: [
         { title: "Chill Kill", duration: "3:34" },
         { title: "Knock Knock", duration: "3:15" },
+    ]
+  },
+  {
+    id: "ive-ive",
+    title: "I've IVE",
+    artist: "IVE",
+    year: "2023",
+    image: "https://is1-ssl.mzstatic.com/image/thumb/Music116/v4/3a/23/b7/3a23b7f4-0b43-df9d-b7e4-14f992443324/197188335663.jpg/600x600bb.jpg",
+    songs: [
+        { title: "I AM", duration: "3:04" },
+        { title: "Kitsch", duration: "2:53" },
+        { title: "ELEVEN", duration: "3:14" },
+        { title: "LOVE DIVE", duration: "3:00" },
+    ]
+  },
+  {
+    id: "formula-of-love",
+    title: "Formula of Love: O+T=<3",
+    artist: "TWICE",
+    year: "2021",
+    image: "https://is1-ssl.mzstatic.com/image/thumb/Music126/v4/87/f5/e0/87f5e0de-c909-f4e6-9621-123565dfbc80/738676858440_Cover.jpg/600x600bb.jpg",
+    songs: [
+        { title: "SCIENTIST", duration: "3:13" },
+        { title: "Moonlight", duration: "3:16" },
+        { title: "Icon", duration: "3:07" },
+    ]
+  },
+  {
+    id: "xoxo",
+    title: "XOXO (Repackage)",
+    artist: "EXO",
+    year: "2013",
+    image: "https://is1-ssl.mzstatic.com/image/thumb/Music124/v4/3a/10/77/3a1077bc-cfb4-dc63-eb69-bf8bc7d7245e/asset.jpg/600x600bb.jpg",
+    songs: [
+        { title: "Growl", duration: "3:33" },
+        { title: "Wolf", duration: "3:52" },
+        { title: "Baby Don't Cry", duration: "4:28" },
+    ]
+  },
+  {
+    id: "crazy-in-love",
+    title: "CRAZY IN LOVE",
+    artist: "ITZY",
+    year: "2021",
+    image: "https://is1-ssl.mzstatic.com/image/thumb/Music116/v4/e7/f3/d7/e7f3d7dc-4bf6-e15d-ca28-3105f713e693/192641938573_Cover.jpg/600x600bb.jpg",
+    songs: [
+        { title: "LOCO", duration: "3:11" },
+        { title: "SWIPE", duration: "3:08" },
+        { title: "SOOO LUCKY", duration: "3:04" },
+    ]
+  },
+  {
+    id: "i-never-die",
+    title: "I NEVER DIE",
+    artist: "(G)I-DLE",
+    year: "2022",
+    image: "https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/4c/da/91/4cda91b0-6fa2-805e-fd1a-e89bf87bb969/8804775250422.jpg/600x600bb.jpg",
+    songs: [
+        { title: "TOMBOY", duration: "3:16" },
+        { title: "VILLAIN DIES", duration: "3:23" },
+        { title: "ALREADY", duration: "3:42" },
+    ]
+  },
+  {
+    id: "lowlife-princess",
+    title: "Lowlife Princess: Noir",
+    artist: "BIBI",
+    year: "2022",
+    image: "https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/7f/29/e7/7f29e7b3-532d-9d11-ab1b-f754bf3db26b/5054197387968.jpg/600x600bb.jpg",
+    songs: [
+        { title: "Animal Farm", duration: "2:56" },
+        { title: "Best Lover", duration: "2:54" },
+        { title: "PADO", duration: "3:14" },
+    ]
+  },
+  {
+    id: "boy",
+    title: "Boy.",
+    artist: "offonoff",
+    year: "2017",
+    image: "https://is1-ssl.mzstatic.com/image/thumb/Music114/v4/83/6b/40/836b4093-0e77-2121-21b7-42765bc1a9f1/80928575.jpg/600x600bb.jpg",
+    songs: [
+        { title: "Cigarette", duration: "3:12" },
+        { title: "bath", duration: "3:43" },
+        { title: "gold", duration: "3:28" },
+    ]
+  },
+  {
+    id: "4-only",
+    title: "4 ONLY",
+    artist: "Lee Hi",
+    year: "2021",
+    image: "https://is1-ssl.mzstatic.com/image/thumb/Music125/v4/d9/5a/a9/d95aa943-0e9b-ae75-3157-ab372f5b831a/8809704422604_Cover.jpg/600x600bb.jpg",
+    songs: [
+        { title: "Red Lipstick", duration: "2:54" },
+        { title: "ONLY", duration: "3:22" },
+        { title: "Savior", duration: "3:38" },
+    ]
+  },
+  {
+    id: "departure",
+    title: "Departure",
+    artist: "Hoody",
+    year: "2019",
+    image: "https://is1-ssl.mzstatic.com/image/thumb/Music112/v4/ee/ea/83/eeea832f-ec08-4127-9142-dbfafdb26b04/8809658318954_Cover.jpg/600x600bb.jpg",
+    songs: [
+        { title: "By Your Side", duration: "3:22" },
+        { title: "Sunshine", duration: "3:13" },
+        { title: "On and On", duration: "3:38" },
     ]
   },
 ];
