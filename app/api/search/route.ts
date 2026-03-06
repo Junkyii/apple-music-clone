@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { searchMusic } from '@/lib/music-api';
+import { searchDeezer } from '@/lib/deezer-api';
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
@@ -10,7 +10,7 @@ export async function GET(request: Request) {
   }
 
   try {
-    const results = await searchMusic(query, 20);
+    const results = await searchDeezer(query, 20);
     return NextResponse.json(results);
   } catch (error) {
     console.error('Search API error:', error);

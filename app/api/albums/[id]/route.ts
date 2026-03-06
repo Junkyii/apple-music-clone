@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { getAlbum } from '@/lib/music-api';
+import { getDeezerAlbum } from '@/lib/deezer-api';
 
 export async function GET(
   request: Request,
@@ -8,7 +8,7 @@ export async function GET(
   const { id } = await params;
 
   try {
-    const album = await getAlbum(id);
+    const album = await getDeezerAlbum(id);
     return NextResponse.json(album);
   } catch (error) {
     console.error('Album API error:', error);

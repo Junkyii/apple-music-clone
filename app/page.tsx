@@ -31,17 +31,27 @@ function SectionHeader({ title, badge, href }: { title: string; badge?: string; 
       <div className="flex items-center gap-3">
         <h2 className="text-[22px] font-bold tracking-tight text-[#f5f5f7]">{title}</h2>
         {badge && (
-          <span className="text-[10px] bg-[#fc3c44]/15 text-[#fc3c44] px-2.5 py-0.5 rounded-full font-semibold uppercase tracking-wider">
+          <span className="text-[10px] bg-[#fc3c44]/15 border border-[#fc3c44]/30 text-[#fc3c44] px-2.5 py-0.5 rounded-full font-bold uppercase tracking-widest shadow-sm shadow-[#fc3c44]/20">
             {badge}
           </span>
         )}
       </div>
       {href && (
-        <Link href={href} className="flex items-center gap-0.5 text-[13px] font-medium text-[#fc3c44] hover:text-[#e0353c] transition-colors">
+        <Link href={href} className="flex items-center gap-1 text-[13px] font-bold text-[#fc3c44] hover:text-[#ff4e56] transition-colors group">
           See All
-          <ChevronRight className="w-4 h-4" />
+          <ChevronRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
         </Link>
       )}
+    </div>
+  );
+}
+
+// Horizontal scroll container component
+function ScrollRow({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="flex overflow-x-auto pb-6 -mx-8 px-8 gap-5 snap-x snap-mandatory scrollbar-hide scroll-smooth" 
+         style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
+      {children}
     </div>
   );
 }
@@ -83,16 +93,16 @@ export default function Home() {
   };
 
   return (
-    <div className="px-8 pt-6 pb-28 min-h-full">
+    <div className="px-8 pt-8 pb-32 min-h-full max-w-[1600px] mx-auto">
       
-      {/* Search Bar */}
-      <div className="mb-8">
-        <form onSubmit={handleSearch} className="flex items-center gap-2.5 bg-white/[0.06] rounded-xl px-4 py-2.5 w-full max-w-lg border border-white/[0.04] focus-within:border-[#fc3c44]/30 focus-within:bg-white/[0.08] transition-all duration-300">
-          <Search className="w-[18px] h-[18px] text-[#6e6e73] shrink-0" />
+      {/* Search Bar - Animated Entrance */}
+      <div className="mb-10 animate-fade-in-up" style={{ '--delay': '0ms' } as React.CSSProperties}>
+        <form onSubmit={handleSearch} className="flex items-center gap-3 glass-panel rounded-2xl px-5 py-3.5 w-full max-w-xl transition-all duration-300 focus-within:border-[#fc3c44]/50 focus-within:shadow-[0_0_20px_rgba(252,60,68,0.15)] group hover:bg-white/[0.08]">
+          <Search className="w-5 h-5 text-[#86868b] shrink-0 group-focus-within:text-[#fc3c44] transition-colors" />
           <input
             type="text"
-            placeholder="Search songs, albums, artists..."
-            className="bg-transparent border-none focus:outline-none text-[14px] text-[#f5f5f7] placeholder-[#6e6e73] w-full font-medium"
+            placeholder="Search artists, songs, and albums"
+            className="bg-transparent border-none focus:outline-none text-[15px] text-[#f5f5f7] placeholder-[#6e6e73] w-full font-medium"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
@@ -102,111 +112,100 @@ export default function Home() {
       {/* Quick Access Grid */}
       <GreetingGrid />
       
-      {/* Trending Now — From iTunes */}
-      <section className="mb-10">
-        <SectionHeader title="Trending Now" badge="Live" href="/search" />
+      {/* Trending Now — From API */}
+      <section className="mb-14 animate-fade-in-up" style={{ '--delay': '200ms' } as React.CSSProperties}>
+        <SectionHeader title="Trending on Apple Music" badge="Deezer API" href="/search" />
         {trendingLoading ? (
-          <div className="flex items-center justify-center py-16">
-            <Loader2 className="w-6 h-6 text-[#fc3c44] animate-spin" />
+          <div className="flex items-center justify-center py-16 w-full glass-panel rounded-2xl border-dashed">
+            <Loader2 className="w-8 h-8 text-[#fc3c44] animate-spin" />
           </div>
         ) : trending.length > 0 ? (
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-5">
-            {trending.slice(0, 5).map((album) => (
-              <Link key={album.id} href={`/album/${album.id}`}>
-                <AlbumCard title={album.title} artist={album.artist} image={album.image} />
-              </Link>
+          <ScrollRow>
+            {trending.map((album) => (
+              <div key={album.id} className="min-w-[160px] max-w-[200px] sm:min-w-[200px] w-full snap-start shrink-0">
+                <Link href={`/album/${album.id}`}>
+                  <AlbumCard title={album.title} artist={album.artist} image={album.image} />
+                </Link>
+              </div>
             ))}
-          </div>
+          </ScrollRow>
         ) : (
-          <div className="bg-white/[0.03] rounded-xl p-8 text-center">
-            <p className="text-[14px] text-[#6e6e73]">Loading trending music...</p>
+          <div className="glass-panel rounded-2xl p-10 text-center">
+            <p className="text-[15px] font-medium text-[#86868b]">Loading trending music...</p>
           </div>
         )}
       </section>
 
       {/* Made For You */}
-      <section className="mb-10">
+      <section className="mb-14 animate-fade-in-up" style={{ '--delay': '300ms' } as React.CSSProperties}>
         <SectionHeader title="Made For You" />
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-5">
-          {ALBUMS.slice(0, 4).map((album, i) => (
-            <Link key={`made-for-${album.title}`} href={album.id ? `/album/${album.id}` : '#'}>
-              <AlbumCard
-                title={`Daily Mix 0${i + 1}`}
-                artist={`${album.artist}, ${ALBUMS[(i+1)%ALBUMS.length].artist}...`}
-                image={album.image}
-              />
-            </Link>
+        <ScrollRow>
+          {ALBUMS.slice(0, 6).map((album, i) => (
+            <div key={`made-for-${album.title}`} className="min-w-[160px] max-w-[200px] sm:min-w-[200px] w-full snap-start shrink-0">
+              <Link href={album.id ? `/album/${album.id}` : '#'}>
+                <AlbumCard
+                  title={`Daily Mix 0${i + 1}`}
+                  artist={`${album.artist}, ${ALBUMS[(i+1)%ALBUMS.length].artist}...`}
+                  image={album.image}
+                />
+              </Link>
+            </div>
           ))}
-        </div>
+        </ScrollRow>
       </section>
       
       {/* Top Picks */}
-      <section className="mb-10">
+      <section className="mb-14 animate-fade-in-up" style={{ '--delay': '400ms' } as React.CSSProperties}>
         <SectionHeader title="Top Picks" />
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-5">
-          {ALBUMS.map((album) => (
-            <Link key={album.title} href={album.id ? `/album/${album.id}` : '#'}>
-              <AlbumCard title={album.title} artist={album.artist} image={album.image} />
-            </Link>
+        <ScrollRow>
+          {ALBUMS.slice(8, 16).map((album) => (
+            <div key={album.title} className="min-w-[160px] max-w-[200px] sm:min-w-[200px] w-full snap-start shrink-0">
+              <Link href={album.id ? `/album/${album.id}` : '#'}>
+                <AlbumCard title={album.title} artist={album.artist} image={album.image} />
+              </Link>
+            </div>
           ))}
-        </div>
+        </ScrollRow>
       </section>
 
-      {/* New Releases */}
-      <section className="mb-10">
-        <SectionHeader title="New Releases" />
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-5">
-          {ALBUMS.slice(0, 4).reverse().map((album) => (
-            <Link key={`new-${album.title}`} href={album.id ? `/album/${album.id}` : '#'}>
-              <AlbumCard title={album.title} artist={album.artist} image={album.image} />
-            </Link>
-          ))}
-        </div>
-      </section>
+      {/* Database Sections */}
+      <div className="grid grid-cols-1 xl:grid-cols-2 gap-8 xl:gap-12 animate-fade-in-up" style={{ '--delay': '500ms' } as React.CSSProperties}>
+        {/* K-Pop */}
+        <section>
+          <SectionHeader title="K-Pop Essentials" badge="Supabase" />
+          {kpopLoading ? (
+            <div className="flex items-center justify-center py-16 glass-panel rounded-2xl">
+              <Loader2 className="w-8 h-8 text-[#fc3c44] animate-spin" />
+            </div>
+          ) : kpopAlbums.length > 0 ? (
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-5">
+              {kpopAlbums.slice(0, 6).map((album) => (
+                <Link key={`kpop-${album.id}`} href={`/album/${album.id}`}>
+                  <AlbumCard title={album.title} artist={album.artist} image={album.image} />
+                </Link>
+              ))}
+            </div>
+          ) : null}
+        </section>
 
-      {/* K-Pop */}
-      <section className="mb-10">
-        <SectionHeader title="K-Pop Essentials" badge="Supabase" />
-        {kpopLoading ? (
-          <div className="flex items-center justify-center py-16">
-            <Loader2 className="w-6 h-6 text-[#fc3c44] animate-spin" />
-          </div>
-        ) : kpopAlbums.length > 0 ? (
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-5">
-            {kpopAlbums.map((album) => (
-              <Link key={`kpop-${album.id}`} href={`/album/${album.id}`}>
-                <AlbumCard title={album.title} artist={album.artist} image={album.image} />
-              </Link>
-            ))}
-          </div>
-        ) : (
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-5">
-            {ALBUMS.slice(8).map((album) => (
-              <Link key={`kpop-${album.title}`} href={album.id ? `/album/${album.id}` : '#'}>
-                <AlbumCard title={album.title} artist={album.artist} image={album.image} />
-              </Link>
-            ))}
-          </div>
-        )}
-      </section>
-
-      {/* K-R&B */}
-      <section className="mb-10">
-        <SectionHeader title="K-R&B Essentials" badge="Supabase" />
-        {kpopLoading ? (
-          <div className="flex items-center justify-center py-16">
-            <Loader2 className="w-6 h-6 text-[#fc3c44] animate-spin" />
-          </div>
-        ) : krnbAlbums.length > 0 ? (
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-5">
-            {krnbAlbums.map((album) => (
-              <Link key={`krnb-${album.id}`} href={`/album/${album.id}`}>
-                <AlbumCard title={album.title} artist={album.artist} image={album.image} />
-              </Link>
-            ))}
-          </div>
-        ) : null}
-      </section>
+        {/* K-R&B */}
+        <section>
+          <SectionHeader title="K-R&B Essentials" badge="Supabase" />
+          {kpopLoading ? (
+            <div className="flex items-center justify-center py-16 glass-panel rounded-2xl">
+              <Loader2 className="w-8 h-8 text-[#fc3c44] animate-spin" />
+            </div>
+          ) : krnbAlbums.length > 0 ? (
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-5">
+              {krnbAlbums.slice(0, 6).map((album) => (
+                <Link key={`krnb-${album.id}`} href={`/album/${album.id}`}>
+                  <AlbumCard title={album.title} artist={album.artist} image={album.image} />
+                </Link>
+              ))}
+            </div>
+          ) : null}
+        </section>
+      </div>
     </div>
   );
 }
